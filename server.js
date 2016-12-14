@@ -214,3 +214,6 @@ function parsePOST(request, clientResponse) {
         })
     }
 }
+function closeDialog() {
+  	$("#loading").hide();
+} 
