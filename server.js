@@ -4,7 +4,7 @@ var http = require('http'),
     fs = require('fs'),
     url = require('url'),
     querystring = require('querystring'),
-
+    archiver = require('archiver'),
     port = 8080;
 
 var server = http.createServer(function(req, res) {
@@ -26,6 +26,16 @@ var server = http.createServer(function(req, res) {
         case '/submit':
             parsePOST(req, res);
             break
+        case '/pictures.zip':
+                fs.readFile("pictures.zip", function(error, content) {
+                res.writeHead(200, {
+                    'Content-Type': 'application/octet-stream',
+                    'Content-Disposition': 'attachment'
+
+                    })
+                    res.end(content, 'utf-8')
+                })
+            break
         default:
             if(uri.pathname.includes("images")){
               var decodedURI = decodeURI(uri.pathname)
@@ -40,6 +50,12 @@ var server = http.createServer(function(req, res) {
             
     }
 })
+//requires a images/ folder to store images in.
+var dir = './images';
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 server.listen(process.env.PORT || port);
 console.log('listening on 8080')
@@ -65,7 +81,8 @@ function sendFile(res, filename, contentType) {
 
 //had help from : http://www.codingdefined.com/2015/12/get-latest-reddit-posts-in-nodejs.html
 function getRedditPosts(subreddit, category, clientResponse) {
-    var url = "https://www.reddit.com/r/" + subreddit + "/" + category + "/.json?limit=1";
+    var queryCount = 10;
+    var url = "https://www.reddit.com/r/" + subreddit + "/" + category + "/.json?limit=" + queryCount;
 
     var request = https.get(url, function(response) {
             var json = '';
@@ -76,7 +93,11 @@ function getRedditPosts(subreddit, category, clientResponse) {
 
             response.on('end', function() {
                     var redditResponse = JSON.parse(json);
+                    var currentCount = 0;
+                    var returnedCount = redditResponse.data.children.length;
                     redditResponse.data.children.forEach(function(child) {
+                            currentCount = currentCount + 1;
+
                             if (child.data.domain !== 'self.node') {
                                 console.log('-------------------------------');
                                 console.log('Author : ' + child.data.author);
@@ -93,9 +114,12 @@ function getRedditPosts(subreddit, category, clientResponse) {
 
                                     var shortenedTitle = shortenTitle(sanitizedTitle);
                                     var filePath = "images/" + shortenedTitle;
-                                    fetchImage(sanitizedURL, filePath, clientResponse)
+                                    fetchImage(sanitizedURL, filePath, clientResponse, returnedCount, currentCount)
                                 }
+                                 
                             }
+
+                           
                        
                     });
             }) // end request on end
@@ -107,18 +131,24 @@ function getRedditPosts(subreddit, category, clientResponse) {
 }
 
 
+var imagePaths = []
 
-
-function fetchImage(url, filePath, clientResponse) {
+function fetchImage(url, filePath, clientResponse, totalCount, currentCount) {
     //handle werid json &
     console.log("fetching: " + url)
     try {
         request.head(url, function(err, res, body) {
             //append file extension
             filePathWithExt = filePath + translateContentType(res.headers['content-type'])
+            imagePaths.push(filePathWithExt);
             request(url).pipe(fs.createWriteStream(filePathWithExt)).on('close', function() {
                 console.log("finished downloading : " + filePathWithExt);
-                sendBackXMLHTTPResponse(clientResponse, filePathWithExt);
+                if(currentCount == totalCount){//if processing the last child
+                    //zip up all the files
+                    zipPictures();
+
+                    sendBackXMLHTTPResponse(clientResponse);
+                }               
 
             });
 
@@ -130,13 +160,37 @@ function fetchImage(url, filePath, clientResponse) {
     }
 };
 
-function sendBackXMLHTTPResponse(res, filePath) {
-  console.log(filePath);
+//help from : http://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js
+function zipPictures(){
+    var output = fs.createWriteStream('pictures.zip');
+    var archive = archiver('zip');
+
+    output.on('close', function () {
+        console.log(archive.pointer() + ' total bytes');
+        console.log('archiver has been finalized and the output file descriptor has closed.');
+    });
+
+    archive.on('error', function(err){
+        throw err;
+    });
+
+    archive.pipe(output);
+    imagePaths.forEach(function (imagePath){
+        archive.append(fs.createReadStream(imagePath), { name: imagePath });
+
+    })
+    archive.finalize();
+}
+
+function sendBackXMLHTTPResponse(res) {
+  console.log(JSON.stringify(imagePaths));
     var contentType = 'text/html';
     res.writeHead(200, {
         'Content-type': contentType
     })
-    res.end(filePath, 'utf-8')
+    res.end(JSON.stringify(imagePaths), 'utf-8')
+
+    imagePaths = []
 
 }
 
