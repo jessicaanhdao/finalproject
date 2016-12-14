@@ -32,16 +32,15 @@ function alertContents() {
     		
           // document.getElementById("unorderedList").innerHTML =httpRequest.responseText;
           // document.getElementById("specialMessage").innerHTML = "Here you are!";
-          //var response = JSON.parse(httpRequest.responseText);
-          //alert(response.computedString);
           console.log(httpRequest.responseText);
+          var imagePaths = JSON.parse(httpRequest.responseText);
 		  var carousel = $('.carousel');
 		  //carousel[0].children[1].children  gives you 4 div items
-		  document.getElementById("active").src=  httpRequest.responseText;
-      //   } else {
-      //     alert("There was a problem with the request.");
-      //   }
-      // }
+		  var divs = carousel[0].children[1].children
+		  for (var i = 0; i < divs.length ; i++){
+			  divs[i].children[0].src=  imagePaths[i];		 	
+		  }
+		   $('#loading').modal('hide');
     }
     catch( e ) {
       alert("Caught Exception: " + e.description);

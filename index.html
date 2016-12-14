@@ -6,10 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script type="text/javascript" src="js/index.js"></script> 
+    <script type="text/javascript" src="js/index.js"></script>
     <style>
         .carousel-inner > .item > img,
         .carousel-inner > .item > a > img {
@@ -31,10 +31,10 @@
                 <div class="form-check">
 
                     <label class="form-check-label">
-                        <input id ="earthPornRadio" type="radio" class="form-check-input" name="subredditRadio" id="earthporn" value="EarthPorn" checked = "true"> /r/earthporn
+                        <input id="earthPornRadio" type="radio" class="form-check-input" name="subredditRadio" id="earthporn" value="EarthPorn" checked="true"> /r/earthporn
                     </label>
                     <label class="form-check-label">
-                        <input id ="foodPornRadio" type="radio" class="form-check-input" name="subredditRadio" value="FoodPorn"> /r/foodporn
+                        <input id="foodPornRadio" type="radio" class="form-check-input" name="subredditRadio" value="FoodPorn"> /r/foodporn
                     </label>
                 </div>
             </div>
@@ -79,19 +79,25 @@
                     <option>top</option>
                 </select>
             </div>
-           <button id = "submitButton" type="submit" class="btn btn-default"  data-toggle="modal" data-target="#loading"> Submit</button>
+            <button id="submitButton" type="submit" class="btn btn-default" data-toggle="modal" data-target="#loading"> Submit</button>
             <div id="loading" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">
                 <div class="modal-dialog modal-m">
-                <div class="modal-content">
-                <div class="modal-header"><h3 style="margin:0;">Fetching images...</h3></div>
-                <div class="modal-body">
-                    <div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 style="margin:0;">Fetching images...</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="progress progress-striped active" style="margin-bottom:0;">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-		</div></div></div>
         </form>
     </div>
 
-    <div class=""  onload="closeDialog()">
+    <div class="">
         <br>
         <div id="redditCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
@@ -105,7 +111,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
-                    <img id = "active" src="img1.jpg" alt="img 1">
+                    <img id="active" src="img1.jpg" alt="img 1">
                 </div>
 
                 <div class="item">
