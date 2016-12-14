@@ -26,6 +26,9 @@ var server = http.createServer(function(req, res) {
         case '/submit':
             parsePOST(req, res);
             break
+         case '/favicon.ico':
+            sendFile(res, 'favicon.ico','image/x-icon')
+            break
         case '/pictures.zip':
                 fs.readFile("pictures.zip", function(error, content) {
                 res.writeHead(200, {
