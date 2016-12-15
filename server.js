@@ -203,8 +203,8 @@ function sendBackXMLHTTPResponse(res) {
 
 function sanitizeTitle(title) {
     //replaces '&' and '.'
-    sanitizedTitle = title.replace(/&amp;/g, "&").replace(/\./g, '').replace(/\"/g, '').replace(/\,/g, '').replace(/\|/g, '').replace(/\\/g,'');
-
+    sanitizedTitle = title.replace(/&amp;/g, "&").replace(/\./g, '').replace(/\"/g, '').replace(/\,/g, '').replace(/\|/g, '').replace(/\\/g,'').replace(/\//g,'');
+    console.log("cleansed title " + sanitizedTitle)
     return sanitizedTitle;
 }
 
