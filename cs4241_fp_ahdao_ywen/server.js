@@ -100,7 +100,6 @@ function getRedditPosts(subreddit, category, clientResponse) {
             response.on('end', function() {
                     var redditResponse = JSON.parse(json);
                     var currentCount = 0;
-                    if(typeof redditResponse.data != 'undefined'){
                     var returnedCount = redditResponse.data.children.length;
                     redditResponse.data.children.forEach(function(child) {
                             currentCount = currentCount + 1;
@@ -129,12 +128,6 @@ function getRedditPosts(subreddit, category, clientResponse) {
                            
                        
                     });
-                }
-                //if reddit gave no posts bacl
-                else{
-                    sendBackXMLHTTPResponse(clientResponse);
-
-                }
             }) // end request on end
     }); // end http get
 
@@ -196,6 +189,7 @@ function zipPictures(){
 }
 
 function sendBackXMLHTTPResponse(res) {
+  console.log(JSON.stringify(imagePaths));
     var contentType = 'text/html';
     res.writeHead(200, {
         'Content-type': contentType

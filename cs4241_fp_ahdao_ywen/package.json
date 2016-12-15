@@ -1,0 +1,19 @@
+{
+  "name": "cs4241-fp-jessicaanhdao-willwen",
+  "version": "0.0.1",
+  "description": "WPI CS 4241 Final Project",
+  "author": "",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "archiver": "^1.3.0",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "querystring": "^0.2.0",
+    "request": "^2.79.0",
+    "url": "^0.11.0"
+  }
+}
