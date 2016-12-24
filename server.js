@@ -8,58 +8,57 @@ var http = require('http'),
     port = 8080;
 
 var server = http.createServer(function(req, res) {
-    var uri = url.parse(req.url)
+        var uri = url.parse(req.url)
 
-    switch (uri.pathname) {
-        case '/':
-            sendFile(res, 'index.html')
-            break
-        case '/index.html':
-            sendFile(res, 'index.html')
-            break
-        case '/js/index.js':
-            sendFile(res, 'js/index.js')
-            break
-        case '/css/bootstrap.min.css':
-            sendFile(res, 'css/bootstrap.min.css')
-            break
-        case '/submit':
-            parsePOST(req, res);
-            break
-         case '/favicon.ico':
-            sendFile(res, 'favicon.ico','image/x-icon')
-            break
-        case '/README.md':
-            sendFile(res, 'README.md')
-            break
-        case '/pictures.zip':
+        switch (uri.pathname) {
+            case '/':
+                sendFile(res, 'index.html')
+                break
+            case '/index.html':
+                sendFile(res, 'index.html')
+                break
+            case '/js/index.js':
+                sendFile(res, 'js/index.js')
+                break
+            case '/css/bootstrap.min.css':
+                sendFile(res, 'css/bootstrap.min.css')
+                break
+            case '/submit':
+                parsePOST(req, res);
+                break
+            case '/favicon.ico':
+                sendFile(res, 'favicon.ico', 'image/x-icon')
+                break
+            case '/README.md':
+                sendFile(res, 'README.md')
+                break
+            case '/pictures.zip':
                 fs.readFile("pictures.zip", function(error, content) {
-                res.writeHead(200, {
-                    'Content-Type': 'application/octet-stream',
-                    'Content-Disposition': 'attachment'
+                    res.writeHead(200, {
+                        'Content-Type': 'application/octet-stream',
+                        'Content-Disposition': 'attachment'
 
                     })
                     res.end(content, 'utf-8')
                 })
-            break
-        default:
-            if(uri.pathname.includes("images")){
-              var decodedURI = decodeURI(uri.pathname)
-              decodedURI = decodedURI.substr(1);
-              console.log("attempting to send " + decodedURI)
-              sendFile(res, decodedURI, "image/jpeg")
+                break
+            default:
+                if (uri.pathname.includes("images")) {
+                    var decodedURI = decodeURI(uri.pathname)
+                    decodedURI = decodedURI.substr(1);
+                    console.log("attempting to send " + decodedURI)
+                    sendFile(res, decodedURI, "image/jpeg")
 
-            }
-            else{
-              res.end('404 not found')  
-            }
-            
-    }
-})
-//requires a images/ folder to store images in.
+                } else {
+                    res.end('404 not found')
+                }
+
+        }
+    })
+    //requires a images/ folder to store images in.
 var dir = './images';
 
-if (!fs.existsSync(dir)){
+if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
 
@@ -84,112 +83,137 @@ function sendFile(res, filename, contentType) {
 // "https://i.reddituploads.com/76dca79094c3489fa10391e9e26653db?fit=max&h=1536&w=1536&s=218d45e8186164d34447dadc1532c00e")
 //, "TEST Northern Vietnam [OC] [960x720")
 
-
+var currentCount = 0;
 //had help from : http://www.codingdefined.com/2015/12/get-latest-reddit-posts-in-nodejs.html
 function getRedditPosts(subreddit, category, clientResponse) {
     var queryCount = 10;
     var url = "https://www.reddit.com/r/" + subreddit + "/" + category + "/.json?limit=" + queryCount;
 
     var request = https.get(url, function(response) {
-            var json = '';
-            response.on('data', function(chunk) {
-                console.log("processing...")
-                json += chunk;
-            });
+        var json = '';
+        response.on('data', function(chunk) {
+            console.log("processing...")
+            json += chunk;
+        });
 
-            response.on('end', function() {
-                    var redditResponse = JSON.parse(json);
-                    var currentCount = 0;
-                    var returnedCount = redditResponse.data.children.length;
-                    redditResponse.data.children.forEach(function(child) {
-                            currentCount = currentCount + 1;
+        response.on('end', function() {
+                var redditResponse = JSON.parse(json);
 
-                            if (child.data.domain !== 'self.node') {
-                                console.log('-------------------------------');
-                                console.log('Author : ' + child.data.author);
-                                console.log('Domain : ' + child.data.domain);
-                                console.log('Title : ' + child.data.title);
-                                console.log('URL : ' + child.data.url);
+                var returnedCount = redditResponse.data.children.length;
+                redditResponse.data.children.forEach(function(child) {
 
-                                if (child.data.domain === "i.imgur.com" || child.data.domain === "i.reddituploads.com" || child.data.domain == "i.redd.it" || child.data.domain === "imgur.com" ||
-                                  child.data.url.includes("jpg") || child.data.url.includes("jpeg")  || child.data.url.includes("png")) {
-                                    var sanitizedURL = sanitizeURL(child.data.url) // removes &amp; and appends .jpeg if none exists
-                                        //removes &amp; and removes '.' to prevent problems with file extension
-                                        //also removes " and , 
-                                    var sanitizedTitle = sanitizeTitle(child.data.title)
+                    if (child.data.domain !== 'self.node') {
+                        console.log('-------------------------------');
+                        console.log('Author : ' + child.data.author);
+                        console.log('Domain : ' + child.data.domain);
+                        console.log('Title : ' + child.data.title);
+                        console.log('URL : ' + child.data.url);
 
-                                    var shortenedTitle = shortenTitle(sanitizedTitle);
-                                    var filePath = "images/" + shortenedTitle;
-                                    fetchImage(sanitizedURL, filePath, clientResponse, returnedCount, currentCount)
-                                }
-                                 
-                            }
+                        // if (child.data.domain === "i.imgur.com" || child.data.domain === "i.reddituploads.com" || child.data.domain == "i.redd.it" || child.data.domain === "imgur.com" ||
+                        //   child.data.url.includes("jpg") || child.data.url.includes("jpeg")  || child.data.url.includes("png")) {
+                        var sanitizedURL = sanitizeURL(child.data.url) // removes &amp; and appends .jpeg if none exists
+                            //removes &amp; and removes '.' to prevent problems with file extension
+                            //also removes " and , 
+                        var sanitizedTitle = sanitizeTitle(child.data.title)
 
-                           
-                       
-                    });
+                        var shortenedTitle = shortenTitle(sanitizedTitle);
+                        var filePath = "images/" + shortenedTitle;
+                        fetchImage(sanitizedURL, filePath, clientResponse, returnedCount)
+                            // }
+                            // else{
+                            // 	//different domain 
+                            // }
+
+                    } else
+                        console.log(child.data.domain);
+                });
+
             }) // end request on end
     }); // end http get
 
-  request.on('error', function(err) {
-      console.log(err);
-  });
+    request.on('error', function(err) {
+        console.log(err.description);
+    });
 }
 
 
 var imagePaths = []
 
-function fetchImage(url, filePath, clientResponse, totalCount, currentCount) {
+function fetchImage(url, filePath, clientResponse, totalCount) {
     //handle werid json &
     console.log("fetching: " + url)
     try {
+
+
         request.head(url, function(err, res, body) {
-            //append file extension
-            filePathWithExt = filePath + translateContentType(res.headers['content-type'])
-            imagePaths.push(filePathWithExt);
-            request(url).pipe(fs.createWriteStream(filePathWithExt)).on('close', function() {
-                console.log("finished downloading : " + filePathWithExt);
-                if(currentCount == totalCount){//if processing the last child
+            console.log(res.statusCode)
+            if (res.statusCode === 404) {
+                console.log("url not found: " + filePathWithExt);
+
+                currentCount = currentCount + 1;
+                if (currentCount == totalCount) { //if processing the last child
                     //zip up all the files
                     zipPictures();
 
                     sendBackXMLHTTPResponse(clientResponse);
-                }               
+                }
+            } else {
+                //append file extension
+                filePathWithExt = filePath + translateContentType(res.headers['content-type'])
+                imagePaths.push(filePathWithExt);
+                request(url).pipe(fs.createWriteStream(filePathWithExt)).on('close', function() {
 
-            });
+                    console.log("finished downloading : " + filePathWithExt);
+                    currentCount = currentCount + 1;
+
+
+                    if (currentCount == totalCount) { //if processing the last child
+                        //zip up all the files
+                        zipPictures();
+
+                        sendBackXMLHTTPResponse(clientResponse);
+                    }
+                })
+            }
+
 
         });
+
+
+
     } catch (err) {
 
-        console.log(err);
+        console.log(err.description);
 
     }
 };
 
 //help from : http://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js
-function zipPictures(){
+function zipPictures() {
     var output = fs.createWriteStream('pictures.zip');
     var archive = archiver('zip');
 
-    output.on('close', function () {
+    output.on('close', function() {
         console.log(archive.pointer() + ' total bytes');
         console.log('archiver has been finalized and the output file descriptor has closed.');
     });
 
-    archive.on('error', function(err){
+    archive.on('error', function(err) {
         throw err;
     });
 
     archive.pipe(output);
-    imagePaths.forEach(function (imagePath){
-        archive.append(fs.createReadStream(imagePath), { name: imagePath });
+    imagePaths.forEach(function(imagePath) {
+        archive.append(fs.createReadStream(imagePath), {
+            name: imagePath
+        });
 
     })
     archive.finalize();
 }
 
 function sendBackXMLHTTPResponse(res) {
-  console.log(JSON.stringify(imagePaths));
+    console.log(JSON.stringify(imagePaths));
     var contentType = 'text/html';
     res.writeHead(200, {
         'Content-type': contentType
@@ -243,7 +267,7 @@ function sanitizeURL(link) {
         else //but all others usually do.
             return sanitizedURL;
     } catch (err) { // weird cases where link might be 'undefined'
-        console.log(err);
+        console.log(err.description);
         return sanitizedURL
     }
 }
@@ -274,6 +298,7 @@ function parsePOST(request, clientResponse) {
         })
     }
 }
+
 function closeDialog() {
-  	$("#loading").hide();
-} 
+    $("#loading").hide();
+}
