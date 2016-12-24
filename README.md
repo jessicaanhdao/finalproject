@@ -1,17 +1,17 @@
 Reddit Photos Downloader
----
+===
 by Anh Dao & Yuan Wen
 ---
 
 
 <h2>High Level Of What Happens:</h2>
-   	User selects subreddit and category.
-	Hitting submit creates a XMLHttpRequest to the server, sending along those two parameters. 
-	Server goes to reddit.com/r/subreddit/category/.json to retrieve the json format of 25 posts.
-	Server sanitizes and filters out (to the best of its ability) valid links for images
-	Server sends a request for each link and downloads the images in /images directory. 
-	On final image, server zips up all images created and sends a Response back to the client, with the whole JSON list of image file paths that were downloaded. 
-	Client updates the carousel through dom manipulation and many child calls to set the src of an image to the the ones just received.
+User selects subreddit and category.
+Hitting submit creates a XMLHttpRequest to the server, sending along those two parameters. 
+Server goes to reddit.com/r/subreddit/category/.json to retrieve the json format of 25 posts.
+Server sanitizes and filters out (to the best of its ability) valid links for images
+Server sends a request for each link and downloads the images in /images directory. 
+On final image, server zips up all images created and sends a Response back to the client, with the whole JSON list of image file paths that were downloaded. 
+Client updates the carousel through dom manipulation and many child calls to set the src of an image to the the ones just received.
 
 
 <h2>HTML Design - Bootstrap :</h2>
@@ -33,7 +33,7 @@ Archiver, to save and zip up all files
 
 
 <h2>Shortcomings:</h2>
-	There are hosting sites, such as flickr which make finding the definite path of the jpeg hard. For example
+There are hosting sites, such as flickr which make finding the definite path of the jpeg hard. For example
 Some posts on the subreddit are all text, and their link domain is self.reddit, thus not an image at all. An example is : 
 <ul>
 	<li>Post: <a href="https://www.reddit.com/r/EarthPorn/comments/5icfi1/waterfall_in_great_smoky_mountain_national_park/">https://www.reddit.com/r/EarthPorn/comments/5icfi1/waterfall_in_great_smoky_mountain_national_park/</a> </li>
