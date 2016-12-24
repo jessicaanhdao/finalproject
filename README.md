@@ -19,23 +19,23 @@
 
 
 <h2>High Level Of What Happens:</h2>
-    <p>User selects subreddit and category.
-	<br>Hitting submit creates a XMLHttpRequest to the server, sending along those two parameters.
-	<br>Server goes to reddit.com/r/subreddit/category/.json to retrieve the json format of 25 posts.
-	<br>Server sanitizes and filters out (to the best of its ability) valid links for images
-	<br>Server sends a request for each link and downloads the images in /images directory. 
-	<br>On final image, server zips up all images created and sends a Response back to the client, with the whole JSON list of image file paths that were downloaded. 
-	<br>Client updates the carousel through dom manipulation and many child calls to set the src of an image to the the ones just received.
-</p>
+   	User selects subreddit and category.
+	Hitting submit creates a XMLHttpRequest to the server, sending along those two parameters. 
+	Server goes to reddit.com/r/subreddit/category/.json to retrieve the json format of 25 posts.
+	Server sanitizes and filters out (to the best of its ability) valid links for images
+	Server sends a request for each link and downloads the images in /images directory. 
+	On final image, server zips up all images created and sends a Response back to the client, with the whole JSON list of image file paths that were downloaded. 
+	Client updates the carousel through dom manipulation and many child calls to set the src of an image to the the ones just received.
+
 
 <h2>HTML Design - Bootstrap :</h2>
-	<p>Carousel, create a carousel for images
-<br>Form, to let users choose what to download
-<br>Modal, to pop up progress bar when fetching images
-<br>Progress, progress-bar, for visual progress bar 
-<br>Button, to format better-look buttons
-<br>Glyphicon, to show download icon
-</p>
+Carousel, create a carousel for images
+Form, to let users choose what to download
+Modal, to pop up progress bar when fetching images
+Progress, progress-bar, for visual progress bar 
+Button, to format better-look buttons
+Glyphicon, to show download icon
+
 
 <h2>Node Modules:</h2>
 <p>Https , reddit won’t let you request their page without it
@@ -48,8 +48,8 @@
 
 
 <h2>Shortcomings:</h2>
-	<p> There are hosting sites, such as flickr which make finding the definite path of the jpeg hard. For example
-<br>Some posts on the subreddit are all text, and their link domain is self.reddit, thus not an image at all. An example is : 
+	There are hosting sites, such as flickr which make finding the definite path of the jpeg hard. For example
+Some posts on the subreddit are all text, and their link domain is self.reddit, thus not an image at all. An example is : 
 <ul>
 	<li>Post: <a href="https://www.reddit.com/r/EarthPorn/comments/5icfi1/waterfall_in_great_smoky_mountain_national_park/">https://www.reddit.com/r/EarthPorn/comments/5icfi1/waterfall_in_great_smoky_mountain_national_park/</a> </li>
 	<li>Links to :
@@ -59,11 +59,7 @@
 </ul>
 <br>We would have liked to create new carousel slides depending on how many images we receive from the server, but we ran out of time. Thus we used a static 12 slides.
 <br>The above problems make counting to a number of images difficult because no matter if the link was a picture or not, our program saves it as a jpeg. Thus sometimes, our file formats are unrecognizable.
-</p>
 
-<h2>Known Bugs:</h2>
-	<p>Some photos will only show half on the carousel but are in full in the .zip file.
-</p>
 
 </body>
 </html>
