@@ -100,34 +100,42 @@ function getRedditPosts(subreddit, category, clientResponse) {
                 var redditResponse = JSON.parse(json);
 
                 var returnedCount = redditResponse.data.children.length;
-                redditResponse.data.children.forEach(function(child) {
+                if (typeof redditResponse.data != 'undefined') {
 
-                    if (child.data.domain !== 'self.node') {
-                        console.log('-------------------------------');
-                        console.log('Author : ' + child.data.author);
-                        console.log('Domain : ' + child.data.domain);
-                        console.log('Title : ' + child.data.title);
-                        console.log('URL : ' + child.data.url);
+                    redditResponse.data.children.forEach(function(child) {
 
-                        // if (child.data.domain === "i.imgur.com" || child.data.domain === "i.reddituploads.com" || child.data.domain == "i.redd.it" || child.data.domain === "imgur.com" ||
-                        //   child.data.url.includes("jpg") || child.data.url.includes("jpeg")  || child.data.url.includes("png")) {
-                        var sanitizedURL = sanitizeURL(child.data.url) // removes &amp; and appends .jpeg if none exists
-                            //removes &amp; and removes '.' to prevent problems with file extension
-                            //also removes " and , 
-                        var sanitizedTitle = sanitizeTitle(child.data.title)
+                        if (child.data.domain !== 'self.node') {
+                            console.log('-------------------------------');
+                            console.log('Author : ' + child.data.author);
+                            console.log('Domain : ' + child.data.domain);
+                            console.log('Title : ' + child.data.title);
+                            console.log('URL : ' + child.data.url);
 
-                        var shortenedTitle = shortenTitle(sanitizedTitle);
-                        var filePath = "images/" + shortenedTitle;
-                        fetchImage(sanitizedURL, filePath, clientResponse, returnedCount)
-                            // }
-                            // else{
-                            // 	//different domain 
-                            // }
+                            // if (child.data.domain === "i.imgur.com" || child.data.domain === "i.reddituploads.com" || child.data.domain == "i.redd.it" || child.data.domain === "imgur.com" ||
+                            //   child.data.url.includes("jpg") || child.data.url.includes("jpeg")  || child.data.url.includes("png")) {
+                            var sanitizedURL = sanitizeURL(child.data.url) // removes &amp; and appends .jpeg if none exists
+                                //removes &amp; and removes '.' to prevent problems with file extension
+                                //also removes " and , 
+                            var sanitizedTitle = sanitizeTitle(child.data.title)
 
-                    } else
-                        console.log(child.data.domain);
-                });
+                            var shortenedTitle = shortenTitle(sanitizedTitle);
+                            var filePath = "images/" + shortenedTitle;
+                            fetchImage(sanitizedURL, filePath, clientResponse, returnedCount)
+                                // }
+                                // else{
+                                // 	//different domain 
+                                // }
 
+                        } else
+                            console.log(child.data.domain);
+                    });
+                }
+
+                //if reddit gave no posts bacl
+                else {
+                    sendBackXMLHTTPResponse(clientResponse);
+
+                }
             }) // end request on end
     }); // end http get
 
@@ -213,7 +221,7 @@ function zipPictures() {
 }
 
 function sendBackXMLHTTPResponse(res) {
-    console.log(JSON.stringify(imagePaths));
+    console.log(JSON.stringify(imagePaths)); 
     var contentType = 'text/html';
     res.writeHead(200, {
         'Content-type': contentType
@@ -227,8 +235,8 @@ function sendBackXMLHTTPResponse(res) {
 
 function sanitizeTitle(title) {
     //replaces '&' and '.'
-    sanitizedTitle = title.replace(/&amp;/g, "&").replace(/\./g, '').replace(/\"/g, '').replace(/\,/g, '').replace(/\|/g, '');
-
+    sanitizedTitle = title.replace(/&amp;/g, "&").replace(/\./g, '').replace(/\"/g, '').replace(/\,/g, '').replace(/\|/g, '').replace(/\\/g, '').replace(/\//g, '');
+    console.log("cleansed title " + sanitizedTitle)
     return sanitizedTitle;
 }
 

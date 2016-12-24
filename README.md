@@ -1,6 +1,6 @@
 <html lang="en">
   <head>
-    <title>Anh Dao - CS4241 Assignment 6</title>
+    <title>Anh Dao ,Yuan Wen - CS4241 Final Project </title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
