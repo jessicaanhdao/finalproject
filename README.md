@@ -1,21 +1,7 @@
-<html lang="en">
-  <head>
-    <title>Anh Dao ,Yuan Wen - CS4241 Final Project </title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-   	
-    <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-</head>
-
-<body class="container">
-
-<h4><i>by Anh Dao & Yuan Wen</i></h4>
+Reddit Photos Downloader
+---
+by Anh Dao & Yuan Wen
+---
 
 
 <h2>High Level Of What Happens:</h2>
@@ -38,12 +24,11 @@ Glyphicon, to show download icon
 
 
 <h2>Node Modules:</h2>
-<p>Https , reddit won’t let you request their page without it
-<br>Request, to fetch and download images from different sites
-<br>Fs, to save and make a directory on the file system
-<br>QueryString, to parse a POST request
-<br>Archiver, to save and zip up all files 
-</p>
+Https , reddit won’t let you request their page without it
+Request, to fetch and download images from different sites
+Fs, to save and make a directory on the file system
+QueryString, to parse a POST request
+Archiver, to save and zip up all files 
 
 
 
