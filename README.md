@@ -3,8 +3,9 @@ Reddit Photos Downloader
 by Anh Dao & Yuan Wen
 ---
 
+P.S. Use app "Image 2 Wallpaper" to set wall papers on android without losing resolution. Android is weird about dimensions of an image.
 
-<h2>High Level Of What Happens:</h2>
+<h2>What Happens?</h2>
 User selects subreddit and category.
 Hitting submit creates a XMLHttpRequest to the server, sending along those two parameters. 
 Server goes to reddit.com/r/subreddit/category/.json to retrieve the json format of 25 posts.
