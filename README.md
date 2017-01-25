@@ -4,6 +4,7 @@ Reddit Photos Downloader
 by Anh Dao & Yuan Wen
 ---
 http://cs4241-fp-willwen.herokuapp.com/
+
 P.S. Use app "Image 2 Wallpaper" to set wall papers on android without losing resolution. Android is weird about dimensions of an image.
 
 <h2>What Happens?</h2>
